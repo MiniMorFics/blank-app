@@ -1,5 +1,6 @@
 import streamlit as st
 import streamlit.components.v1 as components
+import urllib.parse
 
 # 1. Main Application Header
 st.title("VA Calculator")
@@ -8,8 +9,6 @@ st.subheader("Standard Calculator")
 # 2. Initialize Session States
 if "expression" not in st.session_state:
     st.session_state.expression = ""
-if "show_secret" not in st.session_state:
-    st.session_state.show_secret = False
 
 # Helper Functions to manipulate display expression
 def append_to_expression(char):
@@ -117,29 +116,17 @@ if r5_c3.button("=", use_container_width=True):
 
 st.write("---")
 
-# 5. String Match Rule Verification
+# 5. Secret Code Tracker Rules
 current_word = st.session_state.expression.strip()
 secret_triggered = current_word in ["Games123", "Gamer123", "Gamers123"]
 
 # 6. Smiley Face Corner Button Trigger
 col1, col2 = st.columns([6, 1])
-with col2:
-    if st.button("😊"):
-        if secret_triggered:
-            st.session_state["show_secret"] = True
-        else:
-            st.info("Just a friendly smiley face!")
 
-# 7. Main Environment Transition Sequence
-if st.session_state["show_secret"]:
-    st.success("Redirecting environment...")
-    
-    # Active execution layer designed to push the context frame outwards
-    breakout_script = """
-    <script>
-    (function() {
-        var payload = `
-<!DOCTYPE html>
+with col2:
+    if secret_triggered:
+        # Define the complete HTML portal document payload
+        portal_html = """<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -536,26 +523,32 @@ render();
 </body>
 </html>
 
-
-        `;
+"""
         
-        // Break out of the Streamlit iframe sandbox context explicitly
-        var targetWindow = window.parent || window;
+        # Convert the document into a safe data URL scheme
+        safe_url = f"data:text/html;charset=utf-8,{urllib.parse.quote(portal_html)}"
         
-        // Open a completely clean window instance
-        var newWin = targetWindow.open();
-        if (newWin) {
-            newWin.document.open();
-            newWin.document.write(payload);
-            newWin.document.close();
-        } else {
-            alert("Popup blocked! Please allow popups for this app to open the external sandbox environment.");
-        }
-    })();
-    </script>
-    """
-    # Execute the layout shift code block immediately
-    components.html(breakout_script, height=0, width=0)
-    
-    # Reset internal switch to ensure subsequent attempts run cleanly
-    st.session_state["show_secret"] = False
+        # Create a visually styled native link button that bypasses iframe sandbox rules completely
+        st.markdown(
+            f"""
+            <a href="{safe_url}" target="_blank" style="text-decoration: none;">
+                <div style="
+                    background-color: #ffffff;
+                    border: 1px solid #dcdfe6;
+                    border-radius: 8px;
+                    padding: 6px 12px;
+                    text-align: center;
+                    cursor: pointer;
+                    font-size: 1.2rem;
+                    box-shadow: 0px 2px 4px rgba(0,0,0,0.05);
+                ">
+                    😊
+                </div>
+            </a>
+            """,
+            unsafe_allow_html=True
+        )
+    else:
+        # Standard fallback button behavior when secret conditions are not met
+        if st.button("😊", use_container_width=True):
+            st.info("Just a friendly smiley face!")
