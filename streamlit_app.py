@@ -1,5 +1,6 @@
 import urllib.parse
 import streamlit as st
+import base64
 
 # --- 1. SET UP THE VIRGINIA CALCULATOR DISPLAY ---
 st.title("Virginia Calculator")
