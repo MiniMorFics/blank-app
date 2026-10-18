@@ -1,63 +1,119 @@
 import streamlit as st
 
-st.set_page_config(page_title="Virginia Calculator", page_icon="🧮", layout="centered")
-
-# Initialize session state for expression tracking
-if "expression" not in st.session_state:
-    st.session_state.expression = ""
-
+# --- 1. SET UP THE VIRGINIA CALCULATOR DISPLAY ---
 st.title("Virginia Calculator")
 st.subheader("Standard Calculator")
 
-# Display screen
-st.text_input("Result", value=st.session_state.expression, key="display", label_visibility="collapsed", disabled=True)
+# Initialize calculator state variables if they don't exist yet
+if "calc_input" not in st.session_state:
+    st.session_state.calc_input = ""
 
-# Grid Layout for Buttons
-buttons = [
-    ["C", "(", ")", "÷"],
-    ["7", "8", "9", "×"],
-    ["4", "5", "6", "-"],
-    ["1", "2", "3", "+"],
-    ["0", ".", "="]
-]
+# Display screen for the calculator output
+st.text_input("Result", value=st.session_state.calc_input, disabled=True, label_visibility="collapsed")
 
-# Render layout grid
-for row in buttons:
-    cols = st.columns(len(row))
-    for idx, btn_text in enumerate(row):
-        if cols[idx].button(btn_text, use_container_width=True):
-            if btn_text == "C":
-                st.session_state.expression = ""
-            elif btn_text == "=":
-                try:
-                    # Format standard layout operator symbols to evaluatable Python
-                    eval_expr = st.session_state.expression.replace("÷", "/").replace("×", "*")
-                    if eval_expr:
-                        st.session_state.expression = str(eval(eval_expr))
-                except Exception:
-                    st.session_state.expression = "Error"
-            else:
-                if st.session_state.expression == "Error":
-                    st.session_state.expression = ""
-                st.session_state.expression += btn_text
-            st.rerun()
+# --- 2. CALCULATOR GRID LAYOUT ---
+# Row 1: Clear and basic operators
+col1, col2, col3, col4 = st.columns(4)
+with col1:
+    if st.button("C", use_container_width=True):
+        st.session_state.calc_input = ""
+        st.rerun()
+with col2:
+    if st.button("(", use_container_width=True):
+        st.session_state.calc_input += "("
+        st.rerun()
+with col3:
+    if st.button(")", use_container_width=True):
+        st.session_state.calc_input += ")"
+        st.rerun()
+with col4:
+    if st.button("÷", use_container_width=True):
+        st.session_state.calc_input += "/"
+        st.rerun()
+
+# Row 2: 7, 8, 9, x
+col1, col2, col3, col4 = st.columns(4)
+with col1:
+    if st.button("7", use_container_width=True):
+        st.session_state.calc_input += "7"
+        st.rerun()
+with col2:
+    if st.button("8", use_container_width=True):
+        st.session_state.calc_input += "8"
+        st.rerun()
+with col3:
+    if st.button("9", use_container_width=True):
+        st.session_state.calc_input += "9"
+        st.rerun()
+with col4:
+    if st.button("×", use_container_width=True):
+        st.session_state.calc_input += "*"
+        st.rerun()
+
+# Row 3: 4, 5, 6, -
+col1, col2, col3, col4 = st.columns(4)
+with col1:
+    if st.button("4", use_container_width=True):
+        st.session_state.calc_input += "4"
+        st.rerun()
+with col2:
+    if st.button("5", use_container_width=True):
+        st.session_state.calc_input += "5"
+        st.rerun()
+with col3:
+    if st.button("6", use_container_width=True):
+        st.session_state.calc_input += "6"
+        st.rerun()
+with col4:
+    if st.button("-", use_container_width=True):
+        st.session_state.calc_input += "-"
+        st.rerun()
+
+# Row 4: 1, 2, 3, +
+col1, col2, col3, col4 = st.columns(4)
+with col1:
+    if st.button("1", use_container_width=True):
+        st.session_state.calc_input += "1"
+        st.rerun()
+with col2:
+    if st.button("2", use_container_width=True):
+        st.session_state.calc_input += "2"
+        st.rerun()
+with col3:
+    if st.button("3", use_container_width=True):
+        st.session_state.calc_input += "3"
+        st.rerun()
+with col4:
+    if st.button("+", use_container_width=True):
+        st.session_state.calc_input += "+"
+        st.rerun()
+
+# Row 5: 0, ., =
+col1, col2, col3 = st.columns([1, 1, 2])
+with col1:
+    if st.button("0", use_container_width=True):
+        st.session_state.calc_input += "0"
+        st.rerun()
+with col2:
+    if st.button(".", use_container_width=True):
+        st.session_state.calc_input += "."
+        st.rerun()
+with col3:
+    if st.button("=", use_container_width=True):
+        try:
+            # Safely evaluate math expression strings
+            if st.session_state.calc_input:
+                st.session_state.calc_input = str(eval(st.session_state.calc_input))
+        except Exception:
+            st.session_state.calc_input = "Error"
+        st.rerun()
 
 st.write("---")
 
-# Spacer columns to position the smiley face on the bottom right
-col1, col2, col3 = st.columns([6, 1, 1])
-
-with col3:
-    # -------------------------------------------------------------
-    # 📝 REPLACE EVERYTHING BETWEEN THESE TRIPLE QUOTES WITH YOUR HTML:
-    my_custom_page = """
-:)
-    """
-    # -------------------------------------------------------------
-
-    # This dynamically encodes your HTML code string into an address link
-    smiley_html = f"""
-    <a href="<!DOCTYPE html>
+# --- 3. CUSTOM HTML POPUP SECTION ---
+# Paste your custom HTML layout template here inside the triple quotes
+my_custom_html = """
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -452,19 +508,28 @@ applyLook(savedLook);
 render();
 </script>
 </body>
-</html>">
-        <button style="
-            width: 100%;
-            background-color: white;
-            border: 1px solid #d3d3d3;
-            padding: 8px 16px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 18px;
-            box-shadow: 0px 1px 3px rgba(0,0,0,0.1);
-            transition: 0.2s;">
-            😊
-        </button>
-    </a>
-    """
-    st.components.v1.html(smiley_html, height=50)
+</html>
+
+
+"""
+
+# Bundle it securely to load into an about:blank format link wrapper
+smiley_link_button = f"""
+<a href="data:text/html;charset=utf-8,{my_custom_html}" target="_blank">
+    <button style="
+        width: 100%;
+        background-color: white;
+        border: 1px solid #d3d3d3;
+        padding: 12px 16px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 24px;
+        box-shadow: 0px 1px 3px rgba(0,0,0,0.1);
+        transition: 0.2s;">
+        😊 Open Custom Dashboard
+    </button>
+</a>
+"""
+
+# Render the button nicely at the bottom of the page
+st.components.v1.html(smiley_link_button, height=70)
