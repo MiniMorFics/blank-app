@@ -115,6 +115,8 @@ st.write("---")
 
 import base64  # Make sure this import is included at the top or here
 
+import base64
+
 # --- 3. CUSTOM HTML POPUP SECTION ---
 st.write("---")
 
@@ -174,10 +176,10 @@ my_custom_html = """<!DOCTYPE html>
 </body>
 </html>"""
 
-# 2. Encode the HTML to base64 so quotes/backticks don't break the JS script below
+# 2. Encode the HTML to base64
 b64_html = base64.b64encode(my_custom_html.encode('utf-8')).decode('utf-8')
 
-# 3. Build the custom button that utilizes window.open('about:blank')
+# 3. Build the custom button string (Fixed the comment on line 88 below)
 smiley_link_button = f"""
 <button id="dashBtn" style="
     width: 100%;
@@ -191,57 +193,31 @@ smiley_link_button = f"""
     font-family: sans-serif;
     box-shadow: 0px 4px 10px rgba(0,0,0,0.3);
     transition: 0.2s;">
-    😊 Open Custom Dashboard
+    😊
 </button>
 
 <script>
 document.getElementById('dashBtn').addEventListener('click', function() {{
-    // 1. Grab the encoded HTML payload
     var b64Data = "{b64_html}";
-    
-    // 2. Decode the base64 data safely handling UTF-8 special characters
     var decodedHtml = new TextDecoder().decode(Uint8Array.from(atob(b64Data), c => c.charCodeAt(0)));
     
-    # 3. Open a completely blank top-level tab
+    // 3. Open a completely blank top-level tab (Corrected JS comment format)
     var newWindow = window.open('about:blank', '_blank');
     
     if (newWindow) {{
-        // 4. Inject your custom code into the blank workspace document stream
         newWindow.document.open();
         newWindow.document.write(decodedHtml);
         newWindow.document.close();
     }} else {{
-        alert('Popup blocked! Please allow popups in your browser settings to open the dashboard.');
+        alert('Popup blocked! Please allow popups in your browser settings.');
     }}
 }});
 </script>
 """
 
-# Render the button launcher block
+# 4. Render the button launcher block cleanly
 st.components.v1.html(smiley_link_button, height=90)
 
-
-# Safely encode the page content to bypass special character collision
-safe_url_layout = urllib.parse.quote(my_custom_html)
-
-smiley_link_button = f"""
-<a href="data:text/html;charset=utf-8,{safe_url_layout}" target="_blank" style="text-decoration: none;">
-    <button style="
-        width: 100%;
-        background-color: #2b2b2b;
-        color: white;
-        border: 1px solid #444;
-        padding: 14px 16px;
-        border-radius: 8px;
-        cursor: pointer;
-        font-size: 22px;
-        font-family: sans-serif;
-        box-shadow: 0px 4px 10px rgba(0,0,0,0.3);
-        transition: 0.2s;">
-        😊 Open Custom Dashboard
-    </button>
-</a>
-"""
 
 # Render the button container cleanly inside Streamlit
 st.components.v1.html(smiley_link_button, height=90)
