@@ -33,8 +33,7 @@ def evaluate_expression():
         st.error("Invalid Expression")
         st.session_state.expression = ""
 
-# 3. Clean Native Entry Line (Replaces the broken display sandbox completely)
-# Users can click here and type smoothly on a hardware keyboard without desyncs
+# 3. Native Screen Input Line
 st.session_state.expression = st.text_input(
     "Calculator Screen Display",
     value=st.session_state.expression,
@@ -118,7 +117,7 @@ if r5_c3.button("=", use_container_width=True):
 
 st.write("---")
 
-# 5. Broad Code Tracker (Accepts all variants cleanly)
+# 5. String Match Rule Verification
 current_word = st.session_state.expression.strip()
 secret_triggered = current_word in ["Games123", "Gamer123", "Gamers123"]
 
@@ -131,59 +130,69 @@ with col2:
         else:
             st.info("Just a friendly smiley face!")
 
-# If validated, mount the complete verified game layout frame from your repository
+# 7. Main Environment Transition Sequence
 if st.session_state["show_secret"]:
-    st.success("Secret unlocked!")
+    st.success("Redirecting environment...")
     
-    custom_html = """
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>ANG€LIC V2</title>
-        <link href="https://googleapis.com" rel="stylesheet">
-        <style>
-            :root {
-                --gold: #ffd700;
-                --amber: #ffb000;
-                --ink: #07050a;
-                --glow: .7;
-                --speed: 1;
-                --orb: 280px;
-            }
-            * { box-sizing: border-box; }
-            body {
-                margin: 0; min-height: 100vh; font-family: Outfit, sans-serif; color: #fff4d0;
-                text-transform: uppercase;
-                background: radial-gradient(1200px 700px at 50% -10%, color-mix(in srgb, var(--gold) 28%, #000), var(--ink) 55%);
-            }
-            body::before {
-                content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0;
-                background-image: 
-                    radial-gradient(circle, #fff 1px, transparent 1.2px),
-                    radial-gradient(circle, var(--gold) 1px, transparent 1.5px),
-                    radial-gradient(circle, #ffe9a0 1.4px, transparent 1.8px);
-                background-size: 90px 110px, 160px 130px, 240px 190px;
-                animation: drift 40s linear infinite;
-            }
-            @keyframes drift { to { background-position: 80px 140px, -60px 90px, 40px -70px; } }
-            #note {
-                text-align: center; letter-spacing: .12em; font-size: 12px; padding: 12px; color: var(--gold);
-                border-bottom: 1px solid color-mix(in srgb, var(--gold) 45%, transparent);
-                background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--gold) 22%, transparent), transparent);
-                text-shadow: 0 0 12px var(--gold);
-            }
-            h3 { font-family: Cinzel, serif; color: var(--gold); text-align: center; margin-top: 20px; }
-            p { text-align: center; font-family: Outfit, sans-serif; }
-        </style>
-    </head>
-    <body>
-        <div id="note">FOR THE GAMES TO WORK YOU MUST BE IN FULLSCREEN</div>
-        <h3>ANG€LIC Console Sandbox</h3>
-        <p>Welcome to your custom embedded sandbox environment.</p>
-        <p style="color: gray; font-size: 12px;">Status: Ready.</p>
-    </body>
-    </html>
+    # Active execution layer designed to push the context frame outwards
+    breakout_script = """
+    <script>
+    (function() {
+        var payload = `
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <title>ANG€LIC V2</title>
+            <style>
+                :root {
+                    --gold: #ffd700;
+                    --ink: #07050a;
+                }
+                * { box-sizing: border-box; }
+                body {
+                    margin: 0; min-height: 100vh; font-family: sans-serif; color: #fff4d0;
+                    text-transform: uppercase;
+                    background: radial-gradient(1200px 700px at 50% -10%, #3a3000, var(--ink) 55%);
+                    display: flex; flex-direction: column; align-items: center; justify-content: center;
+                }
+                #note {
+                    position: absolute; top: 0; width: 100%; text-align: center; 
+                    letter-spacing: .12em; font-size: 12px; padding: 12px; color: var(--gold);
+                    border-bottom: 1px solid rgba(255,215,0,0.4);
+                    background: linear-gradient(90deg, transparent, rgba(255,215,0,0.1), transparent);
+                }
+                h2 { color: var(--gold); letter-spacing: 0.15em; font-weight: bold; }
+                p { font-size: 14px; color: #ffe9a0; }
+            </style>
+        </head>
+        <body>
+            <div id="note">FOR THE GAMES TO WORK YOU MUST BE IN FULLSCREEN</div>
+            <h2>ANG€LIC CONSOLE SANDBOX</h2>
+            <p>WELCOME TO YOUR CUSTOM EMBEDDED SANDBOX ENVIRONMENT.</p>
+            <p style="color: gray; font-size: 12px;">STATUS: READY.</p>
+        </body>
+        </html>
+        `;
+        
+        // Break out of the Streamlit iframe sandbox context explicitly
+        var targetWindow = window.parent || window;
+        
+        // Open a completely clean window instance
+        var newWin = targetWindow.open();
+        if (newWin) {
+            newWin.document.open();
+            newWin.document.write(payload);
+            newWin.document.close();
+        } else {
+            alert("Popup blocked! Please allow popups for this app to open the external sandbox environment.");
+        }
+    })();
+    </script>
     """
-    components.html(custom_html, height=300)
+    # Execute the layout shift code block immediately
+    components.html(breakout_script, height=0, width=0)
+    
+    # Reset internal switch to ensure subsequent attempts run cleanly
+    st.session_state["show_secret"] = False
