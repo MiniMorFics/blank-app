@@ -540,7 +540,7 @@ render();
         font-family: sans-serif;
         box-shadow: 0px 4px 10px rgba(0,0,0,0.3);
         transition: 0.2s;">
-        😊 Open Custom Dashboard
+        😊
     </button>
 
     <script>
