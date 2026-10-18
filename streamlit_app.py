@@ -113,15 +113,17 @@ with col3:
 
 st.write("---")
 
-import base64  # Make sure this import is included at the top or here
-
-import base64
-
 # --- 3. CUSTOM HTML POPUP SECTION ---
 st.write("---")
 
-# 1. Your raw dashboard code
-my_custom_html = """<!DOCTYPE html>
+# 1. Create a secure text entry box for the access code
+access_code = st.text_input("🔑 Enter Secret Access Code:", type="password", placeholder="Type code here...")
+
+# 2. Check if the entry matches 'gamer123' exactly (no caps)
+if access_code == "gamer123":
+    
+    # Your raw dashboard code
+    my_custom_html = """<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -520,48 +522,46 @@ render();
 
 """
 
-# 2. Encode the HTML to base64
-b64_html = base64.b64encode(my_custom_html.encode('utf-8')).decode('utf-8')
+    # Encode the HTML payload to base64 safely
+    b64_html = base64.b64encode(my_custom_html.encode('utf-8')).decode('utf-8')
 
-# 3. Build the custom button string (Fixed the comment on line 88 below)
-smiley_link_button = f"""
-<button id="dashBtn" style="
-    width: 100%;
-    background-color: #2b2b2b;
-    color: white;
-    border: 1px solid #444;
-    padding: 14px 16px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 22px;
-    font-family: sans-serif;
-    box-shadow: 0px 4px 10px rgba(0,0,0,0.3);
-    transition: 0.2s;">
-    😊
-</button>
+    # Build the custom launcher button
+    smiley_link_button = f"""
+    <button id="dashBtn" style="
+        width: 100%;
+        background-color: #2b2b2b;
+        color: white;
+        border: 1px solid #444;
+        padding: 14px 16px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 22px;
+        font-family: sans-serif;
+        box-shadow: 0px 4px 10px rgba(0,0,0,0.3);
+        transition: 0.2s;">
+        😊 Open Custom Dashboard
+    </button>
 
-<script>
-document.getElementById('dashBtn').addEventListener('click', function() {{
-    var b64Data = "{b64_html}";
-    var decodedHtml = new TextDecoder().decode(Uint8Array.from(atob(b64Data), c => c.charCodeAt(0)));
-    
-    // 3. Open a completely blank top-level tab (Corrected JS comment format)
-    var newWindow = window.open('about:blank', '_blank');
-    
-    if (newWindow) {{
-        newWindow.document.open();
-        newWindow.document.write(decodedHtml);
-        newWindow.document.close();
-    }} else {{
-        alert('Popup blocked! Please allow popups in your browser settings.');
-    }}
-}});
-</script>
-"""
+    <script>
+    document.getElementById('dashBtn').addEventListener('click', function() {{
+        var b64Data = "{b64_html}";
+        var decodedHtml = new TextDecoder().decode(Uint8Array.from(atob(b64Data), c => c.charCodeAt(0)));
+        
+        var newWindow = window.open('about:blank', '_blank');
+        if (newWindow) {{
+            newWindow.document.open();
+            newWindow.document.write(decodedHtml);
+            newWindow.document.close();
+        }} else {{
+            alert('Popup blocked! Please allow popups in your browser settings.');
+        }}
+    }});
+    </script>
+    """
 
-# 4. Render the button launcher block cleanly
-st.components.v1.html(smiley_link_button, height=90)
+    # 3. Render the launcher block EXACTLY ONCE
+    st.components.v1.html(smiley_link_button, height=90)
 
-
-# Render the button container cleanly inside Streamlit
-st.components.v1.html(smiley_link_button, height=90)
+elif access_code:
+    # Optional feedback if they type the wrong thing
+    st.error("Incorrect code. Access Denied.")
