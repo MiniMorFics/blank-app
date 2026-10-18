@@ -11,27 +11,6 @@ if "expression" not in st.session_state:
 if "show_secret" not in st.session_state:
     st.session_state.show_secret = False
 
-# 3. Visual Display Screen
-st.markdown(
-    f"""
-    <div style="
-        background-color: #f0f2f6; 
-        padding: 20px; 
-        border-radius: 10px; 
-        font-size: 2.2rem; 
-        text-align: right; 
-        font-family: monospace; 
-        margin-bottom: 20px;
-        min-height: 80px;
-        border: 1px solid #dcdfe6;
-        color: #333333;
-    ">
-        {st.session_state.expression if st.session_state.expression else "0"}
-    </div>
-    """,
-    unsafe_allow_html=True,
-)
-
 # Helper Functions to manipulate display expression
 def append_to_expression(char):
     st.session_state.expression += str(char)
@@ -54,7 +33,54 @@ def evaluate_expression():
         st.error("Invalid Expression")
         st.session_state.expression = ""
 
-# 4. Calculator Button Grid Layout (Unpacking lists into distinct columns)
+# 3. Hidden Keyboard Input & Visual Display Screen
+# This text input captures physical keyboard events globally and syncs it with session state
+kb_input = st.text_input(
+    "Keyboard Entry Link", 
+    value=st.session_state.expression, 
+    label_visibility="collapsed", 
+    key="hidden_kb_sync"
+)
+
+# Update state if keyboard text input changes manually
+if kb_input != st.session_state.expression:
+    st.session_state.expression = kb_input
+    st.rerun()
+
+st.markdown(
+    f"""
+    <div style="
+        background-color: #f0f2f6; 
+        padding: 20px; 
+        border-radius: 10px; 
+        font-size: 2.2rem; 
+        text-align: right; 
+        font-family: monospace; 
+        margin-bottom: 20px;
+        min-height: 80px;
+        border: 1px solid #dcdfe6;
+        color: #333333;
+    ">
+        {st.session_state.expression if st.session_state.expression else "0"}
+    </div>
+    
+    <script>
+    // JavaScript listener to route keyboard strokes straight to Streamlit's input framework
+    document.addEventListener('keydown', function(e) {{
+        const inputs = parent.document.querySelectorAll('input[type="text"]');
+        if (inputs.length > 0) {{
+            const targetInput = inputs[0];
+            if (parent.document.activeElement !== targetInput) {{
+                targetInput.focus();
+            }}
+        }}
+    }});
+    </script>
+    """,
+    unsafe_allow_html=True,
+)
+
+# 4. Calculator Button Grid Layout
 r1_c1, r1_c2, r1_c3, r1_c4 = st.columns(4)
 r2_c1, r2_c2, r2_c3, r2_c4 = st.columns(4)
 r3_c1, r3_c2, r3_c3, r3_c4 = st.columns(4)
