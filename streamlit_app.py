@@ -3,40 +3,139 @@ import streamlit.components.v1 as components
 
 # 1. Main Application Header
 st.title("VA Calculator")
-
-# 2. Main Calculator Interface
 st.subheader("Standard Calculator")
-num1 = st.number_input("Enter first number:", value=0.0)
-num2 = st.number_input("Enter second number:", value=0.0)
-operation = st.selectbox("Choose operation:", ["Add", "Subtract", "Multiply", "Divide"])
 
-# Calculate results based on user input
-result = 0.0
-if operation == "Add":
-    result = num1 + num2
-elif operation == "Subtract":
-    result = num1 - num2
-elif operation == "Multiply":
-    result = num1 * num2
-elif operation == "Divide":
-    if num2 != 0:
-        result = num1 / num2
-    else:
+# 2. Initialize Session States
+if "expression" not in st.session_state:
+    st.session_state.expression = ""
+if "show_secret" not in st.session_state:
+    st.session_state.show_secret = False
+
+# 3. Visual Display Screen
+st.markdown(
+    f"""
+    <div style="
+        background-color: #f0f2f6; 
+        padding: 20px; 
+        border-radius: 10px; 
+        font-size: 2.2rem; 
+        text-align: right; 
+        font-family: monospace; 
+        margin-bottom: 20px;
+        min-height: 80px;
+        border: 1px solid #dcdfe6;
+        color: #333333;
+    ">
+        {st.session_state.expression if st.session_state.expression else "0"}
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
+
+# Helper Functions to manipulate display expression
+def append_to_expression(char):
+    st.session_state.expression += str(char)
+
+def clear_expression():
+    st.session_state.expression = ""
+
+def evaluate_expression():
+    try:
+        expr = st.session_state.expression.replace("×", "*").replace("÷", "/")
+        if expr:
+            result = eval(expr, {"__builtins__": None}, {})
+            if isinstance(result, float) and result.is_integer():
+                result = int(result)
+            st.session_state.expression = str(result)
+    except ZeroDivisionError:
         st.error("Cannot divide by zero!")
+        st.session_state.expression = ""
+    except Exception:
+        st.error("Invalid Expression")
+        st.session_state.expression = ""
 
-st.write(f"### Result: {result}")
+# 4. Calculator Button Grid Layout
+row1 = st.columns(4)
+row2 = st.columns(4)
+row3 = st.columns(4)
+row4 = st.columns(4)
+row5 = st.columns(3)
 
-# Add spacing to separate the calculator from the bottom layout area
+# --- Row 1 ---
+if row1.button("C", use_container_width=True):
+    clear_expression()
+    st.rerun()
+if row1.button("(", use_container_width=True):
+    append_to_expression("(")
+    st.rerun()
+if row1.button(")", use_container_width=True):
+    append_to_expression(")")
+    st.rerun()
+if row1.button("÷", use_container_width=True):
+    append_to_expression("÷")
+    st.rerun()
+
+# --- Row 2 ---
+if row2.button("7", use_container_width=True):
+    append_to_expression(7)
+    st.rerun()
+if row2.button("8", use_container_width=True):
+    append_to_expression(8)
+    st.rerun()
+if row2.button("9", use_container_width=True):
+    append_to_expression(9)
+    st.rerun()
+if row2.button("×", use_container_width=True):
+    append_to_expression("×")
+    st.rerun()
+
+# --- Row 3 ---
+if row3.button("4", use_container_width=True):
+    append_to_expression(4)
+    st.rerun()
+if row3.button("5", use_container_width=True):
+    append_to_expression(5)
+    st.rerun()
+if row3.button("6", use_container_width=True):
+    append_to_expression(6)
+    st.rerun()
+if row3.button("-", use_container_width=True):
+    append_to_expression("-")
+    st.rerun()
+
+# --- Row 4 ---
+if row4.button("1", use_container_width=True):
+    append_to_expression(1)
+    st.rerun()
+if row4.button("2", use_container_width=True):
+    append_to_expression(2)
+    st.rerun()
+if row4.button("3", use_container_width=True):
+    append_to_expression(3)
+    st.rerun()
+if row4.button("+", use_container_width=True):
+    append_to_expression("+")
+    st.rerun()
+
+# --- Row 5 ---
+if row5.button("0", use_container_width=True):
+    append_to_expression(0)
+    st.rerun()
+if row5.button(".", use_container_width=True):
+    append_to_expression(".")
+    st.rerun()
+if row5.button("=", use_container_width=True):
+    evaluate_expression()
+    st.rerun()
+
 st.write("---")
 
-# 3. Secret Code Checker (Using text inputs or fields to capture 'Games123')
-# Since your calculation box needs to detect 'Games123', we'll check the input fields.
-secret_triggered = (str(num1) == "Games123" or str(num2) == "Games123")
+# 5. Secret Code Tracker
+# Checks if the active typed phrase on the screen display matches 'Games123'
+secret_triggered = (st.session_state.expression == "Games123")
 
-# 4. Smiley Face Corner Button & Secret Custom HTML Embed Trigger
-# We layout a small button area in the bottom corner
+# 6. Smiley Face Corner Button & Secret Custom HTML Embed Trigger
 col1, col2 = st.columns([6, 1])
-
 with col2:
     if st.button("😊"):
         if secret_triggered:
@@ -44,11 +143,9 @@ with col2:
         else:
             st.info("Just a friendly smiley face!")
 
-# If the code matched and the smiley face was clicked, display the about:blank styled container
-if st.session_state.get("show_secret", False):
+# If the code matches 'Games123' and the smiley face is pressed, show the sandbox
+if st.session_state["show_secret"]:
     st.success("Secret unlocked!")
-    
-    # Custom HTML simulation that safely embeds raw content locally inside the webpage
     custom_html = """
 <!DOCTYPE html>
 <html lang="en">
