@@ -54,84 +54,83 @@ def evaluate_expression():
         st.error("Invalid Expression")
         st.session_state.expression = ""
 
-# 4. Calculator Button Grid Layout
-row1 = st.columns(4)
-row2 = st.columns(4)
-row3 = st.columns(4)
-row4 = st.columns(4)
-row5 = st.columns(3)
+# 4. Calculator Button Grid Layout (Unpacking lists into distinct columns)
+r1_c1, r1_c2, r1_c3, r1_c4 = st.columns(4)
+r2_c1, r2_c2, r2_c3, r2_c4 = st.columns(4)
+r3_c1, r3_c2, r3_c3, r3_c4 = st.columns(4)
+r4_c1, r4_c2, r4_c3, r4_c4 = st.columns(4)
+r5_c1, r5_c2, r5_c3 = st.columns(3)
 
 # --- Row 1 ---
-if row1.button("C", use_container_width=True):
+if r1_c1.button("C", use_container_width=True):
     clear_expression()
     st.rerun()
-if row1.button("(", use_container_width=True):
+if r1_c2.button("(", use_container_width=True):
     append_to_expression("(")
     st.rerun()
-if row1.button(")", use_container_width=True):
+if r1_c3.button(")", use_container_width=True):
     append_to_expression(")")
     st.rerun()
-if row1.button("÷", use_container_width=True):
+if r1_c4.button("÷", use_container_width=True):
     append_to_expression("÷")
     st.rerun()
 
 # --- Row 2 ---
-if row2.button("7", use_container_width=True):
+if r2_c1.button("7", use_container_width=True):
     append_to_expression(7)
     st.rerun()
-if row2.button("8", use_container_width=True):
+if r2_c2.button("8", use_container_width=True):
     append_to_expression(8)
     st.rerun()
-if row2.button("9", use_container_width=True):
+if r2_c3.button("9", use_container_width=True):
     append_to_expression(9)
     st.rerun()
-if row2.button("×", use_container_width=True):
+if r2_c4.button("×", use_container_width=True):
     append_to_expression("×")
     st.rerun()
 
 # --- Row 3 ---
-if row3.button("4", use_container_width=True):
+if r3_c1.button("4", use_container_width=True):
     append_to_expression(4)
     st.rerun()
-if row3.button("5", use_container_width=True):
+if r3_c2.button("5", use_container_width=True):
     append_to_expression(5)
     st.rerun()
-if row3.button("6", use_container_width=True):
+if r3_c3.button("6", use_container_width=True):
     append_to_expression(6)
     st.rerun()
-if row3.button("-", use_container_width=True):
+if r3_c4.button("-", use_container_width=True):
     append_to_expression("-")
     st.rerun()
 
 # --- Row 4 ---
-if row4.button("1", use_container_width=True):
+if r4_c1.button("1", use_container_width=True):
     append_to_expression(1)
     st.rerun()
-if row4.button("2", use_container_width=True):
+if r4_c2.button("2", use_container_width=True):
     append_to_expression(2)
     st.rerun()
-if row4.button("3", use_container_width=True):
+if r4_c3.button("3", use_container_width=True):
     append_to_expression(3)
     st.rerun()
-if row4.button("+", use_container_width=True):
+if r4_c4.button("+", use_container_width=True):
     append_to_expression("+")
     st.rerun()
 
 # --- Row 5 ---
-if row5.button("0", use_container_width=True):
+if r5_c1.button("0", use_container_width=True):
     append_to_expression(0)
     st.rerun()
-if row5.button(".", use_container_width=True):
+if r5_c2.button(".", use_container_width=True):
     append_to_expression(".")
     st.rerun()
-if row5.button("=", use_container_width=True):
+if r5_c3.button("=", use_container_width=True):
     evaluate_expression()
     st.rerun()
 
 st.write("---")
 
 # 5. Secret Code Tracker
-# Checks if the active typed phrase on the screen display matches 'Games123'
 secret_triggered = (st.session_state.expression == "Games123")
 
 # 6. Smiley Face Corner Button & Secret Custom HTML Embed Trigger
@@ -143,7 +142,7 @@ with col2:
         else:
             st.info("Just a friendly smiley face!")
 
-# If the code matches 'Games123' and the smiley face is pressed, show the sandbox
+# If the code matches 'Games123' and the smiley face is pressed, show the interface
 if st.session_state["show_secret"]:
     st.success("Secret unlocked!")
     custom_html = """
