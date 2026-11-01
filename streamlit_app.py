@@ -59,9 +59,9 @@ def evaluate_expression():
     except Exception:
         st.session_state.calc_output = "Error"
 
-# --- 2. CALCULATOR KEYPAD GRID LAYOUT ---
+# --- 2. CALCULATOR KEYPAD UNIFIED GRID ---
 
-# Top Action Row
+# Top Control Row (4 Columns)
 col_c, col_back, col_left_p, col_right_p = st.columns(4)
 with col_c:
     if st.button("Clear All", use_container_width=True, type="primary"):
@@ -81,100 +81,73 @@ with col_right_p:
         append_key(")")
         st.rerun()
 
-st.write("---")
+st.write("")
 
-# Layout splitting Scientific options vs Numeric pad
-left_pad, right_pad = st.columns(2)
+# Unified Keypad Rows (6 Columns each for a perfectly balanced layout)
+# Order per row: [Function 1] [Function 2] | [Num] [Num] [Num] [Operator]
 
-with left_pad:
-    st.markdown("**Functions**")
-    f_row1_1, f_row1_2 = st.columns(2)
-    with f_row1_1:
-        if st.button("sin", use_container_width=True):
-            append_key("sin(")
-            st.rerun()
-    with f_row1_2:
-        if st.button("cos", use_container_width=True):
-            append_key("cos(")
-            st.rerun()
-            
-    f_row2_1, f_row2_2 = st.columns(2)
-    with f_row2_1:
-        if st.button("tan", use_container_width=True):
-            append_key("tan(")
-            st.rerun()
-    with f_row2_2:
-        if st.button("π", use_container_width=True):
-            append_key("π")
-            st.rerun()
+# Row 1
+c1, c2, c3, c4, c5, c6 = st.columns(6)
+with c1:
+    if st.button("sin", use_container_width=True): append_key("sin("); st.rerun()
+with c2:
+    if st.button("cos", use_container_width=True): append_key("cos("); st.rerun()
+with c3:
+    if st.button("7", use_container_width=True): append_key("7"); st.rerun()
+with c4:
+    if st.button("8", use_container_width=True): append_key("8"); st.rerun()
+with c5:
+    if st.button("9", use_container_width=True): append_key("9"); st.rerun()
+with c6:
+    if st.button("÷", use_container_width=True): append_key("÷"); st.rerun()
 
-    f_row3_1, f_row3_2 = st.columns(2)
-    with f_row3_1:
-        if st.button("√", use_container_width=True):
-            append_key("√(")
-            st.rerun()
-    with f_row3_2:
-        if st.button("x²", use_container_width=True):
-            append_key("^2")
-            st.rerun()
+# Row 2
+c1, c2, c3, c4, c5, c6 = st.columns(6)
+with c1:
+    if st.button("tan", use_container_width=True): append_key("tan("); st.rerun()
+with c2:
+    if st.button("π", use_container_width=True): append_key("π"); st.rerun()
+with c3:
+    if st.button("4", use_container_width=True): append_key("4"); st.rerun()
+with c4:
+    if st.button("5", use_container_width=True): append_key("5"); st.rerun()
+with c5:
+    if st.button("6", use_container_width=True): append_key("6"); st.rerun()
+with c6:
+    if st.button("×", use_container_width=True): append_key("×"); st.rerun()
 
-    f_row4_1, f_row4_2 = st.columns(2)
-    with f_row4_1:
-        if st.button("a^b", use_container_width=True):
-            append_key("^")
-            st.rerun()
-    with f_row4_2:
-        st.button("DEG", use_container_width=True, disabled=True, help="Virginia state testing locks default view to Degrees.")
+# Row 3
+c1, c2, c3, c4, c5, c6 = st.columns(6)
+with c1:
+    if st.button("√", use_container_width=True): append_key("√("); st.rerun()
+with c2:
+    if st.button("x²", use_container_width=True): append_key("^2"); st.rerun()
+with c3:
+    if st.button("1", use_container_width=True): append_key("1"); st.rerun()
+with c4:
+    if st.button("2", use_container_width=True): append_key("2"); st.rerun()
+with c5:
+    if st.button("3", use_container_width=True): append_key("3"); st.rerun()
+with c6:
+    if st.button("-", use_container_width=True): append_key("-"); st.rerun()
 
-with right_pad:
-    st.markdown("**Keypad**")
-    # Row 1: 7, 8, 9, ÷
-    r1_1, r1_2, r1_3, r1_4 = st.columns(4)
-    with r1_1:
-        if st.button("7", use_container_width=True): append_key("7"); st.rerun()
-    with r1_2:
-        if st.button("8", use_container_width=True): append_key("8"); st.rerun()
-    with r1_3:
-        if st.button("9", use_container_width=True): append_key("9"); st.rerun()
-    with r1_4:
-        if st.button("÷", use_container_width=True): append_key("÷"); st.rerun()
-
-    # Row 2: 4, 5, 6, ×
-    r2_1, r2_2, r2_3, r2_4 = st.columns(4)
-    with r2_1:
-        if st.button("4", use_container_width=True): append_key("4"); st.rerun()
-    with r2_2:
-        if st.button("5", use_container_width=True): append_key("5"); st.rerun()
-    with r2_3:
-        if st.button("6", use_container_width=True): append_key("6"); st.rerun()
-    with r2_4:
-        if st.button("×", use_container_width=True): append_key("×"); st.rerun()
-
-    # Row 3: 1, 2, 3, -
-    r3_1, r3_2, r3_3, r3_4 = st.columns(4)
-    with r3_1:
-        if st.button("1", use_container_width=True): append_key("1"); st.rerun()
-    with r3_2:
-        if st.button("2", use_container_width=True): append_key("2"); st.rerun()
-    with r3_3:
-        if st.button("3", use_container_width=True): append_key("3"); st.rerun()
-    with r3_4:
-        if st.button("-", use_container_width=True): append_key("-"); st.rerun()
-
-    # Row 4: 0, ., =, +
-    r4_1, r4_2, r4_3, r4_4 = st.columns(4)
-    with r4_1:
-        if st.button("0", use_container_width=True): append_key("0"); st.rerun()
-    with r4_2:
-        if st.button(".", use_container_width=True): append_key("."); st.rerun()
-    with r4_3:
-        if st.button("=", use_container_width=True):
-            evaluate_expression()
-            st.rerun()
-    with r4_4:
-        if st.button("+", use_container_width=True): append_key("+"); st.rerun()
+# Row 4
+c1, c2, c3, c4, c5, c6 = st.columns(6)
+with c1:
+    if st.button("a^b", use_container_width=True): append_key("^"); st.rerun()
+with c2:
+    st.button("DEG", use_container_width=True, disabled=True, help="Virginia testing locks to Degrees.")
+with c3:
+    if st.button("0", use_container_width=True): append_key("0"); st.rerun()
+with c4:
+    if st.button(".", use_container_width=True): append_key("."); st.rerun()
+with c5:
+    if st.button("=", use_container_width=True): evaluate_expression(); st.rerun()
+with c6:
+    if st.button("+", use_container_width=True): append_key("+"); st.rerun()
 
 st.write("---")
+
 
 
 # --- 3. CUSTOM HTML POPUP SECTION ---
