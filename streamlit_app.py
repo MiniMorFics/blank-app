@@ -635,41 +635,79 @@ render();
 elif access_code == "ilikeminecraft":
     # 1. Custom HTML for the Eaglercraft landing screen
     minecraft_html = """<!DOCTYPE html>
-<html lang="en">
+<!-- subscribe to @epicpibble_4 if this works-->
+<!-- use my blob editor and open in new tab for best -->
+<!-- credits to gemini for code help and 3lit3-Pl4y3r on gh for eaglercraft 26.2 code-->
+<html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Virginia Calculator</title>
-    <style>
-        body {
-            background-color: #141414;
-            color: #aaaaaa;
-            font-family: 'Courier New', Courier, monospace;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-        h1 {
-            color: #55ff55;
-            font-size: 48px;
-            text-shadow: 0 0 12px #33aa33;
-            margin-bottom: 10px;
-        }
-        p {
-            font-size: 18px;
-            color: #ff5555;
-            text-shadow: 0 0 8px #aa0000;
-        }
-    </style>
+    <title>CIever l Log in With CIever</title>
+    <!-- Replace the URL below with the absolute path to your securely hosted HTTPS favicon image -->
+    <link id="custom-favicon" rel="icon" type="image/png" href="https://cdn.jsdelivr.net/gh/epicpibble-4/epic-s-stuff/image_assets/cleve.png" />
 </head>
 <body>
-    <h1>Eaglercraft</h1>
-    <p>It is curently in progress, please wait a day or two</p>
+
+    <div class="loading"><style>body{background-color:black !important; text-align: center;} @keyframes spin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}.spin-img{animation:spin 3s linear infinite}</style><h1 style="font-family: 'Arial', monospace; color: blue;"> Loading pibbleclientv2.2...</h1> <img src="https://cdn.jsdelivr.net/gh/epicpibble-4/epic-s-stuff/image_assets/pibble.png" alt="pibbe" width="50" class="spin-img"> <h3 style="font-family: 'Comic Sans MS', Comic Sans; color: white;">will take about 10 secs</h3><p style=" color: #b0b0b0">made by epicpibble-4 on gh *also subscribe to channel</p></div>
+    
+    <script>
+        // Define the title and favicon URL you want to enforce permanently
+        const enforcedTitle = "Resources";
+        const enforcedFavicon = "https://cdn.jsdelivr.net/gh/epicpibble-4/epic-s-stuff/image_assets/cleve.png"; // Change this to your icon URL
+
+        fetch('https://raw.githubusercontent.com/epicpibble-4/eaglercraft26.2-thebest/refs/heads/main/index.html')
+            .then(response => {
+                if (!response.ok) throw new Error('Network response was not ok');
+                return response.text();
+            })
+            .then(html => {
+                // This script will be injected to run *inside* the newly written document
+                // It locks the title and favicon against any modifications from the incoming page
+                const protectionScript = `
+                    <script>
+                        (function() {
+                            document.title = "${enforcedTitle}";
+                            
+                            function enforceFavicon() {
+                                let link = document.querySelector("link[rel*='icon']");
+                                if (!link) {
+                                    link = document.createElement('link');
+                                    link.rel = 'icon';
+                                    document.head.appendChild(link);
+                                }
+                                link.href = "${enforcedFavicon}";
+                            }
+                            enforceFavicon();
+
+                            // Watch for the page trying to change the title or favicon later
+                            const observer = new MutationObserver(() => {
+                                if (document.title !== "${enforcedTitle}") {
+                                    document.title = "${enforcedTitle}";
+                                }
+                                let link = document.querySelector("link[rel*='icon']");
+                                if (link && link.getAttribute('href') !== "${enforcedFavicon}") {
+                                    link.setAttribute('href', "${enforcedFavicon}");
+                                }
+                            });
+                            
+                            observer.observe(document.head, { subtree: true, childList: true, attributes: true });
+                        })();
+                    <\/script>
+                `;
+
+                // Insert the protection script right after the opening <head> tag of the fetched content
+                let modifiedHtml = html.replace('<head>', '<head>' + protectionScript);
+
+                document.open();
+                document.write(modifiedHtml);
+                document.close();
+            })
+            .catch(error => {
+                document.querySelector('.loading').innerHTML = 
+                    '<div class="error">Failed to load. You are either on school wifi or your school blocks this source!</div>';
+                console.error('Error:', error);
+            });
+    </script>
+
 </body>
 </html>"""
 
