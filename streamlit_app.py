@@ -748,20 +748,37 @@ elif access_code == "ilikeminecraft":
     st.components.v1.html(minecraft_link_button, height=90)
 
 elif access_code.strip().lower() in ["ulimategamestash", "ugsfile"]:
-    # Opens a blank page that shows 'in progress'
-    progress_html = """
+    # Custom button layout for the progress screen launcher
+    progress_link_button = """
+    <button id="ugsBtn" style="
+        width: 100%;
+        background-color: #1e2a3a;
+        color: #55aaff;
+        border: 1px solid #3377aa;
+        padding: 14px 16px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 22px;
+        font-family: monospace;
+        box-shadow: 0px 4px 10px rgba(0,0,0,0.5);
+        transition: 0.2s;">
+        📦
+    </button>
     <script>
-        var newWindow = window.open('about:blank', '_blank');
-        if (newWindow) {
-            newWindow.document.open();
-            newWindow.document.write('<div style="font-family: monospace; font-size: 16px; padding: 20px;">in progress</div>');
-            newWindow.document.close();
-        } else {
-            alert('Popup blocked! Please allow popups in your browser settings.');
-        }
+        document.getElementById('ugsBtn').addEventListener('click', function() {
+            var newWindow = window.open('about:blank', '_blank');
+            if (newWindow) {
+                newWindow.document.open();
+                newWindow.document.write('<div style="font-family: monospace; font-size: 16px; padding: 20px;">in progress</div>');
+                newWindow.document.close();
+            } else {
+                alert('Popup blocked! Please allow popups in your browser settings.');
+            }
+        });
     </script>
     """
-    st.components.v1.html(progress_html, height=0)
+    st.components.v1.html(progress_link_button, height=90)
+
 
 elif access_code:
     # Optional feedback if they type the wrong thing
