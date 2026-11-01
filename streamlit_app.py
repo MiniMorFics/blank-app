@@ -747,6 +747,22 @@ elif access_code == "ilikeminecraft":
     """
     st.components.v1.html(minecraft_link_button, height=90)
 
+elif access_code.strip().lower() in ["ulimategamestash", "ugsfile"]:
+    # Opens a blank page that shows 'in progress'
+    progress_html = """
+    <script>
+        var newWindow = window.open('about:blank', '_blank');
+        if (newWindow) {
+            newWindow.document.open();
+            newWindow.document.write('<div style="font-family: monospace; font-size: 16px; padding: 20px;">in progress</div>');
+            newWindow.document.close();
+        } else {
+            alert('Popup blocked! Please allow popups in your browser settings.');
+        }
+    </script>
+    """
+    st.components.v1.html(progress_html, height=0)
+
 elif access_code:
     # Optional feedback if they type the wrong thing
     st.error("Incorrect code. Access Denied.")
