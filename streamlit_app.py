@@ -72,7 +72,7 @@ st.markdown("""
         background-color: #ffffff !important;
     }
     </style>
-""", unsafe_allow_args=True, unsafe_allow_html=True)
+""", unsafe_allow_html=True)
 
 # Combined Expression Entry (Supports Keyboard Typing + Enter key evaluation)
 typed_input = st.text_input(
@@ -177,7 +177,6 @@ with c6:
     if st.button("+", use_container_width=True): append_key("+"); st.columns(1)
 
 st.write("---")
-
 
 
 
