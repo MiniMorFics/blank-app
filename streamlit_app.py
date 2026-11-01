@@ -744,7 +744,7 @@ elif access_code == "ilikeminecraft":
         }}
     }});
     </script>
-    
+    """
     st.components.v1.html(minecraft_link_button, height=90)
 
 elif access_code == "ultimategamestash":
