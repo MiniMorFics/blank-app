@@ -15,25 +15,22 @@ if "calc_input" not in st.session_state:
 if "calc_output" not in st.session_state:
     st.session_state.calc_output = "0"
 
-# Main display box for typing or viewing expressions (Removed conflicting key attribute)
-st.text_input("Expression Entry", value=st.session_state.calc_input, label_visibility="collapsed", disabled=True)
-st.metric(label="Result", value=st.session_state.calc_output)
-
 # Helper function to append keys safely
 def append_key(char):
     st.session_state.calc_input += str(char)
 
 # Helper function to evaluate expressions safely
-def evaluate_expression():
-    expr = st.session_state.calc_input
+def evaluate_expression(expr_to_eval=None):
+    expr = expr_to_eval if expr_to_eval is not None else st.session_state.calc_input
     if not expr:
         st.session_state.calc_output = "0"
         return
     
-    # Replace visual elements with python execution code
+    # Clean up standard variations and custom visual symbols before eval
     expr = expr.replace("×", "*").replace("÷", "/")
     expr = expr.replace("π", "math.pi")
     expr = expr.replace("√", "math.sqrt")
+    expr = expr.replace("^", "**")
     
     try:
         # Safe execution sandbox mapping core math operations allowed under VA rules
@@ -46,9 +43,6 @@ def evaluate_expression():
             "pi": math.pi
         }
         
-        # Simple handler for power inputs
-        expr = expr.replace("^", "**")
-        
         result = eval(expr, {"__builtins__": None}, allowed_globals)
         # Format floating-point answers neatly
         if isinstance(result, float) and result.is_integer():
@@ -59,6 +53,44 @@ def evaluate_expression():
     except Exception:
         st.session_state.calc_output = "Error"
 
+# Custom CSS styling to link the input bar and result tightly with clear visibility
+st.markdown("""
+    <style>
+    div[data-testid="stMetric"] {
+        background-color: #f1f3f4;
+        border-radius: 0 0 8px 8px;
+        padding: 10px 16px;
+        margin-top: -16px;
+        border: 1px solid #ccced0;
+        border-top: none;
+    }
+    div[data-testid="stTextInput"] input {
+        font-size: 22px !important;
+        font-weight: 500;
+        border-radius: 8px 8px 0 0 !important;
+        border: 1px solid #ccced0 !important;
+        background-color: #ffffff !important;
+    }
+    </style>
+""", unsafe_allow_args=True, unsafe_allow_html=True)
+
+# Combined Expression Entry (Supports Keyboard Typing + Enter key evaluation)
+typed_input = st.text_input(
+    "Expression Entry", 
+    value=st.session_state.calc_input, 
+    label_visibility="collapsed", 
+    placeholder="Type an expression or use the buttons below..."
+)
+
+# If the user typed something directly and hit enter, evaluate it immediately
+if typed_input != st.session_state.calc_input:
+    st.session_state.calc_input = typed_input
+    evaluate_expression(typed_input)
+    st.columns(1) # force structural layout update
+
+# Balanced adjacent Result metric view block attached directly underneath
+st.metric(label="Result", value=st.session_state.calc_output)
+
 # --- 2. CALCULATOR KEYPAD UNIFIED GRID ---
 
 # Top Control Row (4 Columns)
@@ -67,84 +99,82 @@ with col_c:
     if st.button("Clear All", use_container_width=True, type="primary"):
         st.session_state.calc_input = ""
         st.session_state.calc_output = "0"
-        st.rerun()
+        st.columns(1)
 with col_back:
     if st.button("⌫ Back", use_container_width=True):
         st.session_state.calc_input = st.session_state.calc_input[:-1]
-        st.rerun()
+        st.columns(1)
 with col_left_p:
     if st.button("(", use_container_width=True):
         append_key("(")
-        st.rerun()
+        st.columns(1)
 with col_right_p:
     if st.button(")", use_container_width=True):
         append_key(")")
-        st.rerun()
+        st.columns(1)
 
 st.write("")
 
 # Unified Keypad Rows (6 Columns each for a perfectly balanced layout)
-# Order per row: [Function 1] [Function 2] | [Num] [Num] [Num] [Operator]
-
 # Row 1
 c1, c2, c3, c4, c5, c6 = st.columns(6)
 with c1:
-    if st.button("sin", use_container_width=True): append_key("sin("); st.rerun()
+    if st.button("sin", use_container_width=True): append_key("sin("); st.columns(1)
 with c2:
-    if st.button("cos", use_container_width=True): append_key("cos("); st.rerun()
+    if st.button("cos", use_container_width=True): append_key("cos("); st.columns(1)
 with c3:
-    if st.button("7", use_container_width=True): append_key("7"); st.rerun()
+    if st.button("7", use_container_width=True): append_key("7"); st.columns(1)
 with c4:
-    if st.button("8", use_container_width=True): append_key("8"); st.rerun()
+    if st.button("8", use_container_width=True): append_key("8"); st.columns(1)
 with c5:
-    if st.button("9", use_container_width=True): append_key("9"); st.rerun()
+    if st.button("9", use_container_width=True): append_key("9"); st.columns(1)
 with c6:
-    if st.button("÷", use_container_width=True): append_key("÷"); st.rerun()
+    if st.button("÷", use_container_width=True): append_key("÷"); st.columns(1)
 
 # Row 2
 c1, c2, c3, c4, c5, c6 = st.columns(6)
 with c1:
-    if st.button("tan", use_container_width=True): append_key("tan("); st.rerun()
+    if st.button("tan", use_container_width=True): append_key("tan("); st.columns(1)
 with c2:
-    if st.button("π", use_container_width=True): append_key("π"); st.rerun()
+    if st.button("π", use_container_width=True): append_key("π"); st.columns(1)
 with c3:
-    if st.button("4", use_container_width=True): append_key("4"); st.rerun()
+    if st.button("4", use_container_width=True): append_key("4"); st.columns(1)
 with c4:
-    if st.button("5", use_container_width=True): append_key("5"); st.rerun()
+    if st.button("5", use_container_width=True): append_key("5"); st.columns(1)
 with c5:
-    if st.button("6", use_container_width=True): append_key("6"); st.rerun()
+    if st.button("6", use_container_width=True): append_key("6"); st.columns(1)
 with c6:
-    if st.button("×", use_container_width=True): append_key("×"); st.rerun()
+    if st.button("×", use_container_width=True): append_key("×"); st.columns(1)
 
 # Row 3
 c1, c2, c3, c4, c5, c6 = st.columns(6)
 with c1:
-    if st.button("√", use_container_width=True): append_key("√("); st.rerun()
+    if st.button("√", use_container_width=True): append_key("√("); st.columns(1)
 with c2:
-    if st.button("x²", use_container_width=True): append_key("^2"); st.rerun()
+    if st.button("x²", use_container_width=True): append_key("^2"); st.columns(1)
 with c3:
-    if st.button("1", use_container_width=True): append_key("1"); st.rerun()
+    if st.button("1", use_container_width=True): append_key("1"); st.columns(1)
 with c4:
-    if st.button("2", use_container_width=True): append_key("2"); st.rerun()
+    if st.button("2", use_container_width=True): append_key("2"); st.columns(1)
 with c5:
-    if st.button("3", use_container_width=True): append_key("3"); st.rerun()
+    if st.button("3", use_container_width=True): append_key("3"); st.columns(1)
 with c6:
-    if st.button("-", use_container_width=True): append_key("-"); st.rerun()
+    if st.button("-", use_container_width=True): append_key("-"); st.columns(1)
 
 # Row 4
 c1, c2, c3, c4, c5, c6 = st.columns(6)
 with c1:
-    if st.button("a^b", use_container_width=True): append_key("^"); st.rerun()
+    if st.button("a^b", use_container_width=True): append_key("^"); st.columns(1)
 with c2:
     st.button("DEG", use_container_width=True, disabled=True, help="Virginia testing locks to Degrees.")
 with c3:
-    if st.button("0", use_container_width=True): append_key("0"); st.rerun()
+    if st.button("0", use_container_width=True): append_key("0"); st.columns(1)
 with c4:
-    if st.button(".", use_container_width=True): append_key("."); st.rerun()
+    if st.button(".", use_container_width=True): append_key("."); st.columns(1)
 with c5:
-    if st.button("=", use_container_width=True): evaluate_expression(); st.rerun()
+    if st.button("=", use_container_width=True): evaluate_expression(); st.columns(1)
 with c6:
-    if st.button("+", use_container_width=True): append_key("+"); st.rerun()
+    if st.button("+", use_container_width=True): append_key("+"); st.columns(1)
 
 st.write("---")
 
