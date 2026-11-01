@@ -15,8 +15,8 @@ if "calc_input" not in st.session_state:
 if "calc_output" not in st.session_state:
     st.session_state.calc_output = "0"
 
-# Main display box for typing or viewing expressions
-st.text_input("Expression Entry", value=st.session_state.calc_input, key="display_input", label_visibility="collapsed", disabled=True)
+# Main display box for typing or viewing expressions (Removed conflicting key attribute)
+st.text_input("Expression Entry", value=st.session_state.calc_input, label_visibility="collapsed", disabled=True)
 st.metric(label="Result", value=st.session_state.calc_output)
 
 # Helper function to append keys safely
@@ -147,6 +147,7 @@ with c6:
     if st.button("+", use_container_width=True): append_key("+"); st.rerun()
 
 st.write("---")
+
 
 
 
