@@ -747,9 +747,9 @@ elif access_code == "ilikeminecraft":
     """
     st.components.v1.html(minecraft_link_button, height=90)
 
-elif access_code.strip().lower() in ["ulimategamestash", "ugsfile"]:
+elif access_code.strip().lower() in ["ulimategamestash", "ugsfiles", "ugsfile"]:
     # Custom button layout for the progress screen launcher
-    progress_link_button = """
+       progress_link_button = f"""
     <button id="ugsBtn" style="
         width: 100%;
         background-color: #1e2a3a;
@@ -762,19 +762,21 @@ elif access_code.strip().lower() in ["ulimategamestash", "ugsfile"]:
         font-family: monospace;
         box-shadow: 0px 4px 10px rgba(0,0,0,0.5);
         transition: 0.2s;">
-        📦
+        📁🎮📁
     </button>
     <script>
-        document.getElementById('ugsBtn').addEventListener('click', function() {
-            var newWindow = window.open('about:blank', '_blank');
-            if (newWindow) {
-                newWindow.document.open();
-                newWindow.document.write('<div style="font-family: monospace; font-size: 16px; padding: 20px;">in progress</div>');
-                newWindow.document.close();
-            } else {
-                alert('Popup blocked! Please allow popups in your browser settings.');
-            }
-        });
+    document.getElementById('ugsBtn').addEventListener('click', function() {{
+        var ugsSvg = `this <svg xmlns="http://w3.org" width="100%" height="100%" style="position: fixed; top: 0; left: 0;"> <style>[...]</style> <foreignObject x="0" y="0" width="100%" height="100%"> <body xmlns="http://w3.org"> <meta content='width=device-width, initial-scale=1.0' name='viewport'></meta> <iframe style="position:fixed; top:0; left:0; bottom:0; right:0; width:100%; height:100%; border:none; margin:0; padding:0; overflow:hidden; z-index:999999;" id="test"></iframe> <script>let l = atob("PHNjcmlwdD4KICAgIGxhdW5jaCgpOwoKICAgIGZ1bmN0aW9uIGxhdW5jaCgpIHsKICAgICAgdHJ5IHsKICAgICAgICBmZXRjaCgiaHR0cHM6Ly9jZG4uanNkZWxpdnIubmV0L2doL21jZ2VlMTcxNy85OTQ4OTQ4Mzg5MjM3NjE3MjNAbWFpbi9BQVNJTkdMRUZJTEUuaHRtbD90PSIrRGF0ZS5ub3coKSkKICAgICAgICAgIC50aGVuKHJlc3BvbnNlID0+IHJlc3BvbnNlLnRleHQoKSkKICAgICAgICAgIC50aGVuKGh0bWwgPT4gewogICAgICAgICAgICAgICAgZG9jdW1lbnQuZG9jdW1lbnRFbGVtZW50LmlubmVySFRNTCA9IGh0bWw7CgogICAgICAgICAgICAgICAgZG9jdW1lbnQuZG9jdW1lbnRFbGVtZW50LnF1ZXJ5U2VsZWN0b3JBbGwoJ3NjcmlwdCcpLmZvckVhY2gob2xkU2NyaXB0ID0+IHsKICAgICAgICAgICAgICAgICAgICBjb25zdCBuZXdTY3JpcHQgPSBkb2N1bWVudC5jcmVhdGVFbGVtZW50KCdzY3JpcHQnKTsKICAgICAgICAgICAgICAgICAgICBpZiAob2xkU2NyaXB0LnNyYykgewogICAgICAgICAgICAgICAgICAgICAgICBuZXdTY3JpcHQuc3JjID0gb2xkU2NyaXB0LnNyYzsKICAgICAgICAgICAgICAgICAgICB9IGVsc2UgewogICAgICAgICAgICAgICAgICAgICAgICBuZXdTY3JpcHQudGV4dENvbnRlbnQgPSBvbGRTY3JpcHQudGV4dENvbnRlbnQ7CiAgICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgICAgIGRvY3VtZW50LmJvZHkuYXBwZW5kQ2hpbGQobmV3U2NyaXB0KTsKICAgICAgICAgICAgICAgIH0pOwogICAgICAgICAgfSk7CiAgICAgIH0gY2F0Y2ggKGVycm9yKSB7CiAgICAgICAgY29uc29sZS5lcnJvcignZXJyb3I6JywgZXJyb3IpOwogICAgICB9CiAgICB9CgogIDwvc2NyaXB0PgogIDxzY3JpcHQgYXN5bmMgc3JjPSJodHRwczovL3BhZ2VhZDIuZ29vZ2xlc3luZGljYXRpb24uY29tL3BhZ2VhZDIvanMvYWRzYnlnb29nbGUuanM/Y2xpZW50PWNhLXB1Yi01NTIxMjE5MDg2MDg4ODM3IgogICAgIGNyb3Nzb3JpZ2luPSJhbm9ueW1vdXMiPjwvc2NyaXB0PgoK0"); var theIframe = document.getElementById(\'test\'); theIframe.srcdoc = l;</script> </body> </foreignObject> <script><![CDATA[...]]></script> </svg>`;
+        
+        var newWindow = window.open('about:blank', '_blank');
+        if (newWindow) {{
+            newWindow.document.open();
+            newWindow.document.write(ugsSvg);
+            newWindow.document.close();
+        }} else {{
+            alert('Popup blocked! Please allow popups in your browser settings.');
+        }}
+    }});
     </script>
     """
     st.components.v1.html(progress_link_button, height=90)
