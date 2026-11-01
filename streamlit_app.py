@@ -15,9 +15,10 @@ if "calc_input" not in st.session_state:
 if "calc_output" not in st.session_state:
     st.session_state.calc_output = "0"
 
-# Helper function to append keys safely
+# Helper function to append keys safely and force immediate update
 def append_key(char):
     st.session_state.calc_input += str(char)
+    st.rerun()
 
 # Helper function to evaluate expressions safely
 def evaluate_expression(expr_to_eval=None):
@@ -86,7 +87,7 @@ typed_input = st.text_input(
 if typed_input != st.session_state.calc_input:
     st.session_state.calc_input = typed_input
     evaluate_expression(typed_input)
-    st.columns(1) # force structural layout update
+    st.rerun()
 
 # Balanced adjacent Result metric view block attached directly underneath
 st.metric(label="Result", value=st.session_state.calc_output)
@@ -99,19 +100,17 @@ with col_c:
     if st.button("Clear All", use_container_width=True, type="primary"):
         st.session_state.calc_input = ""
         st.session_state.calc_output = "0"
-        st.columns(1)
+        st.rerun()
 with col_back:
     if st.button("⌫ Back", use_container_width=True):
         st.session_state.calc_input = st.session_state.calc_input[:-1]
-        st.columns(1)
+        st.rerun()
 with col_left_p:
     if st.button("(", use_container_width=True):
         append_key("(")
-        st.columns(1)
 with col_right_p:
     if st.button(")", use_container_width=True):
         append_key(")")
-        st.columns(1)
 
 st.write("")
 
@@ -119,64 +118,67 @@ st.write("")
 # Row 1
 c1, c2, c3, c4, c5, c6 = st.columns(6)
 with c1:
-    if st.button("sin", use_container_width=True): append_key("sin("); st.columns(1)
+    if st.button("sin", use_container_width=True): append_key("sin(")
 with c2:
-    if st.button("cos", use_container_width=True): append_key("cos("); st.columns(1)
+    if st.button("cos", use_container_width=True): append_key("cos(")
 with c3:
-    if st.button("7", use_container_width=True): append_key("7"); st.columns(1)
+    if st.button("7", use_container_width=True): append_key("7")
 with c4:
-    if st.button("8", use_container_width=True): append_key("8"); st.columns(1)
+    if st.button("8", use_container_width=True): append_key("8")
 with c5:
-    if st.button("9", use_container_width=True): append_key("9"); st.columns(1)
+    if st.button("9", use_container_width=True): append_key("9")
 with c6:
-    if st.button("÷", use_container_width=True): append_key("÷"); st.columns(1)
+    if st.button("÷", use_container_width=True): append_key("÷")
 
 # Row 2
 c1, c2, c3, c4, c5, c6 = st.columns(6)
 with c1:
-    if st.button("tan", use_container_width=True): append_key("tan("); st.columns(1)
+    if st.button("tan", use_container_width=True): append_key("tan(")
 with c2:
-    if st.button("π", use_container_width=True): append_key("π"); st.columns(1)
+    if st.button("π", use_container_width=True): append_key("π")
 with c3:
-    if st.button("4", use_container_width=True): append_key("4"); st.columns(1)
+    if st.button("4", use_container_width=True): append_key("4")
 with c4:
-    if st.button("5", use_container_width=True): append_key("5"); st.columns(1)
+    if st.button("5", use_container_width=True): append_key("5")
 with c5:
-    if st.button("6", use_container_width=True): append_key("6"); st.columns(1)
+    if st.button("6", use_container_width=True): append_key("6")
 with c6:
-    if st.button("×", use_container_width=True): append_key("×"); st.columns(1)
+    if st.button("×", use_container_width=True): append_key("×")
 
 # Row 3
 c1, c2, c3, c4, c5, c6 = st.columns(6)
 with c1:
-    if st.button("√", use_container_width=True): append_key("√("); st.columns(1)
+    if st.button("√", use_container_width=True): append_key("√(")
 with c2:
-    if st.button("x²", use_container_width=True): append_key("^2"); st.columns(1)
+    if st.button("x²", use_container_width=True): append_key("^2")
 with c3:
-    if st.button("1", use_container_width=True): append_key("1"); st.columns(1)
+    if st.button("1", use_container_width=True): append_key("1")
 with c4:
-    if st.button("2", use_container_width=True): append_key("2"); st.columns(1)
+    if st.button("2", use_container_width=True): append_key("2")
 with c5:
-    if st.button("3", use_container_width=True): append_key("3"); st.columns(1)
+    if st.button("3", use_container_width=True): append_key("3")
 with c6:
-    if st.button("-", use_container_width=True): append_key("-"); st.columns(1)
+    if st.button("-", use_container_width=True): append_key("-")
 
 # Row 4
 c1, c2, c3, c4, c5, c6 = st.columns(6)
 with c1:
-    if st.button("a^b", use_container_width=True): append_key("^"); st.columns(1)
+    if st.button("a^b", use_container_width=True): append_key("^")
 with c2:
     st.button("DEG", use_container_width=True, disabled=True, help="Virginia testing locks to Degrees.")
 with c3:
-    if st.button("0", use_container_width=True): append_key("0"); st.columns(1)
+    if st.button("0", use_container_width=True): append_key("0")
 with c4:
-    if st.button(".", use_container_width=True): append_key("."); st.columns(1)
+    if st.button(".", use_container_width=True): append_key(".")
 with c5:
-    if st.button("=", use_container_width=True): evaluate_expression(); st.columns(1)
+    if st.button("=", use_container_width=True): 
+        evaluate_expression()
+        st.rerun()
 with c6:
-    if st.button("+", use_container_width=True): append_key("+"); st.columns(1)
+    if st.button("+", use_container_width=True): append_key("+")
 
 st.write("---")
+
 
 
 
