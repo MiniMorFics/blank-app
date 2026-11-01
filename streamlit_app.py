@@ -757,7 +757,7 @@ elif access_code == "ultimategamestash":
 
     # 3. Build the custom green launch button
 minecraft_link_button = f"""
-<button id="mcBtn" style="
+<button id="mcBtn" style="""
     width: 100%;
     background-color: #1e3d1e;
         color: #55ff55;
