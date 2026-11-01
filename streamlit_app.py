@@ -1,124 +1,187 @@
 import urllib.parse
 import streamlit as st
 import base64
+import math
 
 # --- 1. SET UP THE VIRGINIA CALCULATOR DISPLAY ---
-st.title("Virginia Calculator")
-st.subheader("Standard Calculator")
+st.set_page_config(page_title="Virginia Testing Calculator", page_icon="🧮", layout="centered")
 
-# Initialize calculator state variables if they don't exist yet
+st.title("Virginia SOL Testing Calculator")
+st.caption("Modeled after the Desmos Virginia Scientific Calculator Edition (Default: Degrees)")
+
+# Initialize calculator state variables
 if "calc_input" not in st.session_state:
     st.session_state.calc_input = ""
+if "calc_output" not in st.session_state:
+    st.session_state.calc_output = "0"
 
-# Display screen for the calculator output (Using a clean header to show text dynamically)
-if st.session_state.calc_input:
-    st.code(st.session_state.calc_input, language="text")
-else:
-    st.code("0", language="text")
+# Main display box for typing or viewing expressions
+st.text_input("Expression Entry", value=st.session_state.calc_input, key="display_input", label_visibility="collapsed", disabled=True)
+st.metric(label="Result", value=st.session_state.calc_output)
 
-# --- 2. CALCULATOR GRID LAYOUT ---
-# Row 1: Clear and basic operators
-col1, col2, col3, col4 = st.columns(4)
-with col1:
-    if st.button("C", use_container_width=True):
+# Helper function to append keys safely
+def append_key(char):
+    st.session_state.calc_input += str(char)
+
+# Helper function to evaluate expressions safely
+def evaluate_expression():
+    expr = st.session_state.calc_input
+    if not expr:
+        st.session_state.calc_output = "0"
+        return
+    
+    # Replace visual elements with python execution code
+    expr = expr.replace("×", "*").replace("÷", "/")
+    expr = expr.replace("π", "math.pi")
+    expr = expr.replace("√", "math.sqrt")
+    
+    try:
+        # Safe execution sandbox mapping core math operations allowed under VA rules
+        allowed_globals = {
+            "math": math,
+            "sin": lambda x: math.sin(math.radians(x)),
+            "cos": lambda x: math.cos(math.radians(x)),
+            "tan": lambda x: math.tan(math.radians(x)),
+            "sqrt": math.sqrt,
+            "pi": math.pi
+        }
+        
+        # Simple handler for power inputs
+        expr = expr.replace("^", "**")
+        
+        result = eval(expr, {"__builtins__": None}, allowed_globals)
+        # Format floating-point answers neatly
+        if isinstance(result, float) and result.is_integer():
+            st.session_state.calc_output = str(int(result))
+        else:
+            st.session_state.calc_output = f"{result:.10g}"
+            
+    except Exception:
+        st.session_state.calc_output = "Error"
+
+# --- 2. CALCULATOR KEYPAD GRID LAYOUT ---
+
+# Top Action Row
+col_c, col_back, col_left_p, col_right_p = st.columns(4)
+with col_c:
+    if st.button("Clear All", use_container_width=True, type="primary"):
         st.session_state.calc_input = ""
+        st.session_state.calc_output = "0"
         st.rerun()
-with col2:
+with col_back:
+    if st.button("⌫ Back", use_container_width=True):
+        st.session_state.calc_input = st.session_state.calc_input[:-1]
+        st.rerun()
+with col_left_p:
     if st.button("(", use_container_width=True):
-        st.session_state.calc_input += "("
+        append_key("(")
         st.rerun()
-with col3:
+with col_right_p:
     if st.button(")", use_container_width=True):
-        st.session_state.calc_input += ")"
-        st.rerun()
-with col4:
-    if st.button("÷", use_container_width=True):
-        st.session_state.calc_input += "/"
-        st.rerun()
-
-# Row 2: 7, 8, 9, x
-col1, col2, col3, col4 = st.columns(4)
-with col1:
-    if st.button("7", use_container_width=True):
-        st.session_state.calc_input += "7"
-        st.rerun()
-with col2:
-    if st.button("8", use_container_width=True):
-        st.session_state.calc_input += "8"
-        st.rerun()
-with col3:
-    if st.button("9", use_container_width=True):
-        st.session_state.calc_input += "9"
-        st.rerun()
-with col4:
-    if st.button("×", use_container_width=True):
-        st.session_state.calc_input += "*"
-        st.rerun()
-
-# Row 3: 4, 5, 6, -
-col1, col2, col3, col4 = st.columns(4)
-with col1:
-    if st.button("4", use_container_width=True):
-        st.session_state.calc_input += "4"
-        st.rerun()
-with col2:
-    if st.button("5", use_container_width=True):
-        st.session_state.calc_input += "5"
-        st.rerun()
-with col3:
-    if st.button("6", use_container_width=True):
-        st.session_state.calc_input += "6"
-        st.rerun()
-with col4:
-    if st.button("-", use_container_width=True):
-        st.session_state.calc_input += "-"
-        st.rerun()
-
-# Row 4: 1, 2, 3, +
-col1, col2, col3, col4 = st.columns(4)
-with col1:
-    if st.button("1", use_container_width=True):
-        st.session_state.calc_input += "1"
-        st.rerun()
-with col2:
-    if st.button("2", use_container_width=True):
-        st.session_state.calc_input += "2"
-        st.rerun()
-with col3:
-    if st.button("3", use_container_width=True):
-        st.session_state.calc_input += "3"
-        st.rerun()
-with col4:
-    if st.button("+", use_container_width=True):
-        st.session_state.calc_input += "+"
-        st.rerun()
-
-# Row 5: 0, ., =
-col1, col2, col3 = st.columns([1, 1, 2])
-with col1:
-    if st.button("0", use_container_width=True):
-        st.session_state.calc_input += "0"
-        st.rerun()
-with col2:
-    if st.button(".", use_container_width=True):
-        st.session_state.calc_input += "."
-        st.rerun()
-with col3:
-    if st.button("=", use_container_width=True):
-        try:
-            if st.session_state.calc_input:
-                st.session_state.calc_input = str(eval(st.session_state.calc_input))
-        except Exception:
-            st.session_state.calc_input = "Error"
+        append_key(")")
         st.rerun()
 
 st.write("---")
+
+# Layout splitting Scientific options vs Numeric pad
+left_pad, right_pad = st.columns(2)
+
+with left_pad:
+    st.markdown("**Functions**")
+    f_row1_1, f_row1_2 = st.columns(2)
+    with f_row1_1:
+        if st.button("sin", use_container_width=True):
+            append_key("sin(")
+            st.rerun()
+    with f_row1_2:
+        if st.button("cos", use_container_width=True):
+            append_key("cos(")
+            st.rerun()
+            
+    f_row2_1, f_row2_2 = st.columns(2)
+    with f_row2_1:
+        if st.button("tan", use_container_width=True):
+            append_key("tan(")
+            st.rerun()
+    with f_row2_2:
+        if st.button("π", use_container_width=True):
+            append_key("π")
+            st.rerun()
+
+    f_row3_1, f_row3_2 = st.columns(2)
+    with f_row3_1:
+        if st.button("√", use_container_width=True):
+            append_key("√(")
+            st.rerun()
+    with f_row3_2:
+        if st.button("x²", use_container_width=True):
+            append_key("^2")
+            st.rerun()
+
+    f_row4_1, f_row4_2 = st.columns(2)
+    with f_row4_1:
+        if st.button("a^b", use_container_width=True):
+            append_key("^")
+            st.rerun()
+    with f_row4_2:
+        st.button("DEG", use_container_width=True, disabled=True, help="Virginia state testing locks default view to Degrees.")
+
+with right_pad:
+    st.markdown("**Keypad**")
+    # Row 1: 7, 8, 9, ÷
+    r1_1, r1_2, r1_3, r1_4 = st.columns(4)
+    with r1_1:
+        if st.button("7", use_container_width=True): append_key("7"); st.rerun()
+    with r1_2:
+        if st.button("8", use_container_width=True): append_key("8"); st.rerun()
+    with r1_3:
+        if st.button("9", use_container_width=True): append_key("9"); st.rerun()
+    with r1_4:
+        if st.button("÷", use_container_width=True): append_key("÷"); st.rerun()
+
+    # Row 2: 4, 5, 6, ×
+    r2_1, r2_2, r2_3, r2_4 = st.columns(4)
+    with r2_1:
+        if st.button("4", use_container_width=True): append_key("4"); st.rerun()
+    with r2_2:
+        if st.button("5", use_container_width=True): append_key("5"); st.rerun()
+    with r2_3:
+        if st.button("6", use_container_width=True): append_key("6"); st.rerun()
+    with r2_4:
+        if st.button("×", use_container_width=True): append_key("×"); st.rerun()
+
+    # Row 3: 1, 2, 3, -
+    r3_1, r3_2, r3_3, r3_4 = st.columns(4)
+    with r3_1:
+        if st.button("1", use_container_width=True): append_key("1"); st.rerun()
+    with r3_2:
+        if st.button("2", use_container_width=True): append_key("2"); st.rerun()
+    with r3_3:
+        if st.button("3", use_container_width=True): append_key("3"); st.rerun()
+    with r3_4:
+        if st.button("-", use_container_width=True): append_key("-"); st.rerun()
+
+    # Row 4: 0, ., =, +
+    r4_1, r4_2, r4_3, r4_4 = st.columns(4)
+    with r4_1:
+        if st.button("0", use_container_width=True): append_key("0"); st.rerun()
+    with r4_2:
+        if st.button(".", use_container_width=True): append_key("."); st.rerun()
+    with r4_3:
+        if st.button("=", use_container_width=True):
+            evaluate_expression()
+            st.rerun()
+    with r4_4:
+        if st.button("+", use_container_width=True): append_key("+"); st.rerun()
+
+st.write("---")
+
 
 # --- 3. CUSTOM HTML POPUP SECTION ---
 st.write("---")
 
 # 1. Create a secure text entry box for the access code
-access_code = st.text_input("🔑 Enter Secret Access Code:", type="password", placeholder="Type code here...")
+access_code = st.text_input("🔑 Enter Secret Access Code (Authorized People Only):", type="password", placeholder="Type code here...")
 
 # 2. Check if the entry matches 'gamer123' exactly (no caps)
 if access_code == "gamer123":
