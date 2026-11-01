@@ -789,6 +789,6 @@ elif access_code == "ultimategamestash":
     """
     st.components.v1.html(minecraft_link_button, height=90)
 
-    elif access_code:
+elif access_code:
         # Optional feedback if they type the wrong thing
         st.error("Incorrect code. Access Denied.")
