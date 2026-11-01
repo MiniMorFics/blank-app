@@ -639,7 +639,7 @@ elif access_code == "ilikeminecraft":
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Eaglercraft</title>
+    <title>Virginia Calculator</title>
     <style>
         body {
             background-color: #141414;
@@ -669,7 +669,7 @@ elif access_code == "ilikeminecraft":
 </head>
 <body>
     <h1>Eaglercraft</h1>
-    <p>Currently in progress...</p>
+    <p>It is curently in progress, please wait a day or two</p>
 </body>
 </html>"""
 
@@ -690,7 +690,7 @@ elif access_code == "ilikeminecraft":
         font-family: monospace;
         box-shadow: 0px 4px 10px rgba(0,0,0,0.5);
         transition: 0.2s;">
-        ⛏️ Open Eaglercraft
+        ⛏️
     </button>
     <script>
     document.getElementById('mcBtn').addEventListener('click', function() {{
