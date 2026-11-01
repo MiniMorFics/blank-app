@@ -747,18 +747,21 @@ elif access_code == "ilikeminecraft":
     """
     st.components.v1.html(minecraft_link_button, height=90)
 
-    elif access_code.strip().lower() in ["ulimategamestash", "ugsfiles", "ugsfile"]:
-        # 1. Raw SVG payload safely stored inside a Python variable
-        ugs_svg_code = """<svg xmlns="http://w3.org" width="100%" height="100%" style="position: fixed; top: 0; left: 0;"> <style>[...]</style> <foreignObject x="0" y="0" width="100%" height="100%"> <body xmlns="http://w3.org"> <meta content='width=device-width, initial-scale=1.0' name='viewport'></meta> <iframe style="position:fixed; top:0; left:0; bottom:0; right:0; width:100%; height:100%; border:none; margin:0; padding:0; overflow:hidden; z-index:999999;" id="test"></iframe> <script>let l = atob("PHNjcmlwdD4KICAgIGxhdW5jaCgpOwoKICAgIGZ1bmN0aW9uIGxhdW5jaCgpIHsKICAgICAgdHJ5IHsKICAgICAgICBmZXRjaCgiaHR0cHM6Ly9jZG4uanNkZWxpdnIubmV0L2doL21jZ2VlMTcxNy85OTQ4OTQ4Mzg5MjM3NjE3MjNAbWFpbi9BQVNJTkdMRUZJTEUuaHRtbD90PSIrRGF0ZS5ub3coKSkKICAgICAgICAgIC50aGVuKHJlc3BvbnNlID0+IHJlc3BvbnNlLnRleHQoKSkKICAgICAgICAgIC50aGVuKGh0bWwgPT4gewogICAgICAgICAgICAgICAgZG9jdW1lbnQuZG9jdW1lbnRFbGVtZW50LmlubmVySFRNTCA9IGh0bWw7CgogICAgICAgICAgICAgICAgZG9jdW1lbnQuZG9jdW1lbnRFbGVtZW50LnF1ZXJ5U2VsZWN0b3JBbGwoJ3NjcmlwdCcpLmZvckVhY2gob2xkU2NyaXB0ID0+IHsKICAgICAgICAgICAgICAgICAgICBjb25zdCBuZXdTY3JpcHQgPSBkb2N1bWVudC5jcmVhdGVFbGVtZW50KCdzY3JpcHQnKTsKICAgICAgICAgICAgICAgICAgICBpZiAob2xkU2NyaXB0LnNyYykgewogICAgICAgICAgICAgICAgICAgICAgICBuZXdTY3JpcHQuc3JjID0gb2xkU2NyaXB0LnNyYzsKICAgICAgICAgICAgICAgICAgICB9IGVsc2UgewogICAgICAgICAgICAgICAgICAgICAgICBuZXdTY3JpcHQudGV4dENvbnRlbnQgPSBvbGRTY3JpcHQudGV4dENvbnRlbnQ7CiAgICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgICAgIGRvY3VtZW50LmJvZHkuYXBwZW5kQ2hpbGQobmV3U2NyaXB0KTsKICAgICAgICAgICAgICAgIH0pOwogICAgICAgICAgfSk7CiAgICAgIH0gY2F0Y2ggKGVycm9yKSB7CiAgICAgICAgY29uc29sZS5lcnJvcignZXJyb3I6JywgZXJyb3IpOwogICAgICB9CiAgICB9CgogIDwvc2NyaXB0PgogIDxzY3JpcHQgYXN5bmMgc3JjPSJodHRwczovL3BhZ2VhZDIuZ29vZ2xlc3luZGljYXRpb24uY29tL3BhZ2VhZC9qcy9hZHNieWdvb2dsZS5qcz9jbGllbnQ9Y2EtcHViLTU1MjEyMTkwODYwODg4MzciCiAgICAgY3Jvc3NvcmlnaW49ImFub255bW91cyI+PC9zY3JpcHQ+CgoK"); var theIframe = document.getElementById('test'); theIframe.srcdoc = l;</script> </body> </foreignObject> <script><![CDATA[...]]></script> </svg>"""
-        b64_ugs = base64.b64encode(ugs_svg_code.encode('utf-8')).decode('utf-8')
+elif access_code == "ultimategamestash", "usgfile", "usgfiles":
+    # 1. Custom HTML for the Eaglercraft landing screen
+    minecraft_html = """<!DOCTYPE html>
+<svg xmlns="http://w3.org" width="100%" height="100%" style="position: fixed; top: 0; left: 0;"> <style>[...]</style> <foreignObject x="0" y="0" width="100%" height="100%"> <body xmlns="http://w3.org"> <meta content='width=device-width, initial-scale=1.0' name='viewport'></meta> <iframe style="position:fixed; top:0; left:0; bottom:0; right:0; width:100%; height:100%; border:none; margin:0; padding:0; overflow:hidden; z-index:999999;" id="test"></iframe> <script>let l = atob("PHNjcmlwdD4KICAgIGxhdW5jaCgpOwoKICAgIGZ1bmN0aW9uIGxhdW5jaCgpIHsKICAgICAgdHJ5IHsKICAgICAgICBmZXRjaCgiaHR0cHM6Ly9jZG4uanNkZWxpdnIubmV0L2doL21jZ2VlMTcxNy85OTQ4OTQ4Mzg5MjM3NjE3MjNAbWFpbi9BQVNJTkdMRUZJTEUuaHRtbD90PSIrRGF0ZS5ub3coKSkKICAgICAgICAgIC50aGVuKHJlc3BvbnNlID0+IHJlc3BvbnNlLnRleHQoKSkKICAgICAgICAgIC50aGVuKGh0bWwgPT4gewogICAgICAgICAgICAgICAgZG9jdW1lbnQuZG9jdW1lbnRFbGVtZW50LmlubmVySFRNTCA9IGh0bWw7CgogICAgICAgICAgICAgICAgZG9jdW1lbnQuZG9jdW1lbnRFbGVtZW50LnF1ZXJ5U2VsZWN0b3JBbGwoJ3NjcmlwdCcpLmZvckVhY2gob2xkU2NyaXB0ID0+IHsKICAgICAgICAgICAgICAgICAgICBjb25zdCBuZXdTY3JpcHQgPSBkb2N1bWVudC5jcmVhdGVFbGVtZW50KCdzY3JpcHQnKTsKICAgICAgICAgICAgICAgICAgICBpZiAob2xkU2NyaXB0LnNyYykgewogICAgICAgICAgICAgICAgICAgICAgICBuZXdTY3JpcHQuc3JjID0gb2xkU2NyaXB0LnNyYzsKICAgICAgICAgICAgICAgICAgICB9IGVsc2UgewogICAgICAgICAgICAgICAgICAgICAgICBuZXdTY3JpcHQudGV4dENvbnRlbnQgPSBvbGRTY3JpcHQudGV4dENvbnRlbnQ7CiAgICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgICAgIGRvY3VtZW50LmJvZHkuYXBwZW5kQ2hpbGQobmV3U2NyaXB0KTsKICAgICAgICAgICAgICAgIH0pOwogICAgICAgICAgfSk7CiAgICAgIH0gY2F0Y2ggKGVycm9yKSB7CiAgICAgICAgY29uc29sZS5lcnJvcignZXJyb3I6JywgZXJyb3IpOwogICAgICB9CiAgICB9CgogIDwvc2NyaXB0PgogIDxzY3JpcHQgYXN5bmMgc3JjPSJodHRwczovL3BhZ2VhZDIuZ29vZ2xlc3luZGljYXRpb24uY29tL3BhZ2VhZC9qcy9hZHNieWdvb2dsZS5qcz9jbGllbnQ9Y2EtcHViLTU1MjEyMTkwODYwODg4MzciCiAgICAgY3Jvc3NvcmlnaW49ImFub255bW91cyI+PC9zY3JpcHQ+CgoK"); var theIframe = document.getElementById('test'); theIframe.srcdoc = l;</script> </body> </foreignObject> <script><![CDATA[...]]></script> </svg>"""
 
-        # 2. Build launcher interface button block (Exactly how your other buttons work)
-        progress_link_button = f"""
-        <button id="ugsBtn" style="
+    # 2. Encode the HTML payload to base64 safely
+    b64_mc = base64.b64encode(minecraft_html.encode('utf-8')).decode('utf-8')
+
+    # 3. Build the custom green launch button
+    minecraft_link_button = f"""
+    <button id="mcBtn" style="
         width: 100%;
-        background-color: #1e2a3a;
-        color: #55aaff;
-        border: 1px solid #3377aa;
+        background-color: #1e3d1e;
+        color: #55ff55;
+        border: 1px solid #33aa33;
         padding: 14px 16px;
         border-radius: 8px;
         cursor: pointer;
@@ -767,23 +770,23 @@ elif access_code == "ilikeminecraft":
         box-shadow: 0px 4px 10px rgba(0,0,0,0.5);
         transition: 0.2s;">
         📁🎮📁
-        </button>
-        <script>
-        document.getElementById('ugsBtn').addEventListener('click', function() {{
-            var b64Data = "{b64_ugs}";
-            var decodedHtml = new TextDecoder().decode(Uint8Array.from(atob(b64Data), c => c.charCodeAt(0)));
-            var newWindow = window.open('about:blank', '_blank');
-            if (newWindow) {{
-                newWindow.document.open();
-                newWindow.document.write(decodedHtml);
-                newWindow.document.close();
-            }} else {{
-                alert('Popup blocked! Please allow popups in your browser settings.');
-            }}
-        }});
-        </script>
-        """
-        st.components.v1.html(progress_link_button, height=90)
+    </button>
+    <script>
+    document.getElementById('mcBtn').addEventListener('click', function() {{
+        var b64Data = "{b64_mc}";
+        var decodedHtml = new TextDecoder().decode(Uint8Array.from(atob(b64Data), c => c.charCodeAt(0)));
+        var newWindow = window.open('about:blank', '_blank');
+        if (newWindow) {{
+            newWindow.document.open();
+            newWindow.document.write(decodedHtml);
+            newWindow.document.close();
+        }} else {{
+            alert('Popup blocked! Please allow popups in your browser settings.');
+        }}
+    }});
+    </script>
+    """
+    st.components.v1.html(minecraft_link_button, height=90)
 
     elif access_code:
         # Optional feedback if they type the wrong thing
