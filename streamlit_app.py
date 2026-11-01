@@ -6,8 +6,8 @@ import math
 # --- 1. SET UP THE VIRGINIA CALCULATOR DISPLAY ---
 st.set_page_config(page_title="Virginia Testing Calculator", page_icon="🧮", layout="centered")
 
-st.title("Virginia SOL Testing Calculator")
-st.caption("Modeled after the Desmos Virginia Scientific Calculator Edition (Default: Degrees)")
+st.title("Virginia Testing Calculator")
+st.caption("Modeled after the Desmos Virginia Scientific Calculator")
 
 # Initialize calculator state variables
 if "calc_input" not in st.session_state:
@@ -629,7 +629,85 @@ render();
     """
 
     # 3. Render the launcher block EXACTLY ONCE
+    # (This is inside your existing "if access_code == 'gamer123':" block)
     st.components.v1.html(smiley_link_button, height=90)
+
+elif access_code == "ilikeminecraft":
+    # 1. Custom HTML for the Eaglercraft landing screen
+    minecraft_html = """<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eaglercraft</title>
+    <style>
+        body {
+            background-color: #141414;
+            color: #aaaaaa;
+            font-family: 'Courier New', Courier, monospace;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        h1 {
+            color: #55ff55;
+            font-size: 48px;
+            text-shadow: 0 0 12px #33aa33;
+            margin-bottom: 10px;
+        }
+        p {
+            font-size: 18px;
+            color: #ff5555;
+            text-shadow: 0 0 8px #aa0000;
+        }
+    </style>
+</head>
+<body>
+    <h1>Eaglercraft</h1>
+    <p>Currently in progress...</p>
+</body>
+</html>"""
+
+    # 2. Encode the HTML payload to base64 safely
+    b64_mc = base64.b64encode(minecraft_html.encode('utf-8')).decode('utf-8')
+
+    # 3. Build the custom green launch button
+    minecraft_link_button = f"""
+    <button id="mcBtn" style="
+        width: 100%;
+        background-color: #1e3d1e;
+        color: #55ff55;
+        border: 1px solid #33aa33;
+        padding: 14px 16px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 22px;
+        font-family: monospace;
+        box-shadow: 0px 4px 10px rgba(0,0,0,0.5);
+        transition: 0.2s;">
+        ⛏️ Open Eaglercraft
+    </button>
+    <script>
+    document.getElementById('mcBtn').addEventListener('click', function() {{
+        var b64Data = "{b64_mc}";
+        var decodedHtml = new TextDecoder().decode(Uint8Array.from(atob(b64Data), c => c.charCodeAt(0)));
+        var newWindow = window.open('about:blank', '_blank');
+        if (newWindow) {{
+            newWindow.document.open();
+            newWindow.document.write(decodedHtml);
+            newWindow.document.close();
+        }} else {{
+            alert('Popup blocked! Please allow popups in your browser settings.');
+        }}
+    }});
+    </script>
+    """
+    st.components.v1.html(minecraft_link_button, height=90)
 
 elif access_code:
     # Optional feedback if they type the wrong thing
